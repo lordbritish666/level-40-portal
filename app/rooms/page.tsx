@@ -1,130 +1,30 @@
 "use client"
+import { useState } from "react"
+import Image from "next/image"
 import Link from "next/link"
 
-interface Area { name: string; icon: string; items: string[]; note?: string }
-interface Zone { zone: string; color: string; borderColor: string; icon: string; areas: Area[]; note?: string }
-
-const ROOMS: Zone[] = [
-  {
-    zone: "ENTRANCE ROOM",
-    color: "#9966ff",
-    borderColor: "#7744cc",
-    icon: "🚪",
-    areas: [
-      {
-        name: "CHARACTER SELECT",
-        icon: "📷",
-        items: ["Photo booth", "Polaroid printer", "Pixel-art frame"],
-      },
-      {
-        name: "ARCADE VAULT",
-        icon: "🕹️",
-        items: ["2× retro emulators hooked to TV", "Live leaderboard"],
-      },
-    ],
-    note: "↓ Guests enter here",
-  },
-  {
-    zone: "MAIN STAGE ROOM",
-    color: "#00cc66",
-    borderColor: "#009944",
-    icon: "🎸",
-    areas: [
-      {
-        name: "THE OVERWORLD STAGE",
-        icon: "🎺",
-        items: [
-          "Open mic jam · 16-bit OST set list",
-          "Chrono Trigger · FF VI · Contra · Zelda",
-          "Birthday moment: live jazz \"Frog's Theme\"",
-        ],
-        note: "Pixel-art overworld map as backdrop",
-      },
-      {
-        name: "LOOT DROPS",
-        icon: "🍟",
-        items: [
-          "Buffet table · Chachos stash",
-          "Loaded potato skins",
-          "Berry HP Restore ice cream bar",
-        ],
-        note: "All items labelled as pixel-art item cards",
-      },
-      {
-        name: "THE INN & TAVERN",
-        icon: "🍺",
-        items: [
-          "Cocktail bar · Pixel-art menu board",
-          "Save Point Sour · Elixir of the Ancients",
-          "Phoenix Down · MP Refill milkshake bar",
-        ],
-        note: "Back wall of main room",
-      },
-    ],
-  },
-  {
-    zone: "SIDE ROOM A",
-    color: "#4488ff",
-    borderColor: "#2255cc",
-    icon: "🥽",
-    areas: [
-      {
-        name: "ENTER THE ISEKAI",
-        icon: "🥽",
-        items: [
-          "2× Meta Quest 3 hooked to TV screen",
-          "Beat Saber · VR worlds",
-          "5-min guest slots",
-        ],
-        note: "Isekai / anime VR worlds",
-      },
-    ],
-  },
-  {
-    zone: "SIDE ROOM B",
-    color: "#4488ff",
-    borderColor: "#2255cc",
-    icon: "🌙",
-    areas: [
-      {
-        name: "THE SAVE POINT",
-        icon: "🌙",
-        items: [
-          "Quiet chill room · Low seating",
-          "Soft lighting · Ambient FF piano playlist",
-          "Good conversation corner",
-        ],
-        note: "For guests needing a breather",
-      },
-    ],
-  },
-  {
-    zone: "BACK / SEPARATE",
-    color: "#aa7733",
-    borderColor: "#885522",
-    icon: "🚬",
-    areas: [
-      {
-        name: "THE SCHOLAR'S STUDY",
-        icon: "🚬",
-        items: ["Separate smoking / cigar room at back"],
-      },
-    ],
-  },
+const ROOMS = [
+  { id: "entrance-room", file: "/rooms/entrance-room.png", name: "ENTRANCE ROOM" },
+  { id: "loot-drops", file: "/rooms/loot-drops.png", name: "LOOT DROPS" },
+  { id: "inn-tavern", file: "/rooms/inn-tavern.png", name: "THE INN & TAVERN" },
+  { id: "side-room-a", file: "/rooms/side-room-a.png", name: "ENTER THE ISEKAI" },
+  { id: "save-point", file: "/rooms/save-point.png", name: "THE SAVE POINT" },
+  { id: "scholar-study", file: "/rooms/scholar-study.png", name: "THE SCHOLAR'S STUDY" },
 ]
 
 export default function RoomsPage() {
+  const [lightbox, setLightbox] = useState<string | null>(null)
+
   return (
     <div style={{ minHeight: "100vh", background: "#050510" }}>
 
-      {/* Header */}
       <div style={{
         textAlign: "center",
         padding: "2rem 1rem 1.5rem",
         borderBottom: "3px solid rgba(255,215,0,0.2)",
         position: "sticky",
         top: 0,
-        background: "rgba(5,5,16,0.97)",
+        background: "rgba(5,5,16,0.95)",
         zIndex: 10,
         backdropFilter: "blur(4px)",
       }}>
@@ -139,91 +39,52 @@ export default function RoomsPage() {
         </div>
       </div>
 
-      {/* Legend */}
       <div style={{
-        display: "flex",
-        flexWrap: "wrap",
-        gap: "0.75rem",
-        justifyContent: "center",
-        padding: "1rem",
-        borderBottom: "2px solid #111",
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(min(320px, 100%), 1fr))",
+        maxWidth: 900,
+        margin: "0 auto",
       }}>
-        {[
-          { color: "#9966ff", label: "ENTRANCE" },
-          { color: "#00cc66", label: "MAIN STAGE" },
-          { color: "#4488ff", label: "SIDE ROOMS" },
-          { color: "#aa7733", label: "BACK / SEPARATE" },
-        ].map(l => (
-          <div key={l.label} style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
-            <div style={{ width: 10, height: 10, background: l.color, border: "2px solid #000" }} />
-            <span style={{ fontSize: "0.4rem", color: "#888" }}>{l.label}</span>
+        {ROOMS.map(r => (
+          <div key={r.id} onClick={() => setLightbox(r.file)} style={{ position: "relative", cursor: "zoom-in", overflow: "hidden" }}>
+            <Image
+              src={r.file}
+              alt={r.name}
+              width={900}
+              height={1200}
+              style={{ width: "100%", height: "auto", display: "block", imageRendering: "pixelated", transition: "transform 0.2s ease" }}
+              onMouseEnter={e => (e.currentTarget.style.transform = "scale(1.02)")}
+              onMouseLeave={e => (e.currentTarget.style.transform = "scale(1)")}
+            />
           </div>
         ))}
       </div>
 
-      {/* Room cards */}
-      <div style={{ maxWidth: 680, margin: "0 auto", padding: "1.5rem 1rem 3rem" }}>
-        <div className="flex flex-col gap-4">
-          {ROOMS.map(room => (
-            <div
-              key={room.zone}
-              style={{
-                border: `3px solid ${room.borderColor}`,
-                background: `${room.color}11`,
-                padding: "1.25rem",
-              }}
-            >
-              {/* Zone header */}
-              <div style={{
-                fontSize: "0.55rem",
-                color: room.color,
-                marginBottom: "1rem",
-                letterSpacing: "0.15em",
-                borderBottom: `2px solid ${room.borderColor}44`,
-                paddingBottom: "0.5rem",
-              }}>
-                {room.icon} {room.zone}
-                {room.note && (
-                  <span style={{ fontSize: "0.35rem", color: "#666", marginLeft: "0.75rem", fontStyle: "normal" }}>
-                    {room.note}
-                  </span>
-                )}
-              </div>
-
-              {/* Areas inside zone */}
-              <div className="flex flex-col gap-3">
-                {room.areas.map(area => (
-                  <div
-                    key={area.name}
-                    style={{
-                      background: "rgba(0,0,0,0.3)",
-                      border: `2px solid ${room.borderColor}55`,
-                      padding: "0.75rem 0.9rem",
-                    }}
-                  >
-                    <div style={{ fontSize: "0.5rem", color: "#ffd700", marginBottom: "0.5rem" }}>
-                      {area.icon} {area.name}
-                    </div>
-                    <div className="flex flex-col gap-1">
-                      {area.items.map((item, i) => (
-                        <div key={i} style={{ fontSize: "0.4rem", color: "#aaa", lineHeight: 1.8 }}>
-                          · {item}
-                        </div>
-                      ))}
-                    </div>
-                    {area.note && (
-                      <div style={{ fontSize: "0.35rem", color: "#666", marginTop: "0.4rem", fontStyle: "italic" }}>
-                        ↳ {area.note}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
+      <div style={{ textAlign: "center", padding: "1.5rem", fontSize: "0.4rem", color: "#333" }}>
+        TAP ANY POSTER TO VIEW FULL SIZE
       </div>
 
+      {lightbox && (
+        <div onClick={() => setLightbox(null)} style={{
+          position: "fixed", inset: 0, background: "rgba(0,0,0,0.92)", zIndex: 100,
+          display: "flex", alignItems: "center", justifyContent: "center", cursor: "zoom-out", padding: "1rem",
+        }}>
+          <div style={{ position: "relative", maxWidth: "min(560px, 95vw)", maxHeight: "95vh" }}>
+            <Image
+              src={lightbox}
+              alt="room poster"
+              width={900}
+              height={1200}
+              style={{ width: "100%", height: "auto", maxHeight: "95vh", objectFit: "contain", imageRendering: "pixelated", display: "block", border: "4px solid #ffd700", boxShadow: "0 0 60px rgba(255,215,0,0.3)" }}
+            />
+            <button style={{
+              position: "absolute", top: -16, right: -16, background: "#ffd700", color: "#000",
+              border: "3px solid #000", width: 32, height: 32, fontFamily: "var(--font-pixel), monospace",
+              fontSize: "0.5rem", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+            }}>✕</button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
