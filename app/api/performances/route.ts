@@ -25,6 +25,10 @@ export async function GET(req: NextRequest) {
     })
   )
 
+  if (searchParams.get("include") === "all") {
+    return NextResponse.json(performances)
+  }
+
   const response: Record<string, unknown> = { live, queued: queuedWithVotes }
 
   if (includeSingers) {

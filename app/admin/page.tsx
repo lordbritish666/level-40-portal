@@ -31,7 +31,7 @@ export default function AdminPage() {
       const [mRes, sRes, pRes] = await Promise.all([
         fetch("/api/musicians"),
         fetch("/api/singers"),
-        fetch("/api/performances"),
+        fetch("/api/performances?include=all"),
       ])
       const [musicians, singers, performances] = await Promise.all([mRes.json(), sRes.json(), pRes.json()])
       setData({ musicians, singers, performances })
