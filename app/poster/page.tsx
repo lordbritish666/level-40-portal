@@ -122,59 +122,44 @@ export default function PosterPage() {
         />
 
         {/* QR overlay — replaces the JOIN THE PARTY dialog box */}
-        {/* Positioned at ~62% from top, centered, ~54% wide — matches dialog area */}
         <div style={{
           position: "absolute",
-          top: "62%",
+          top: "60%",
           left: "50%",
           transform: "translateX(-50%)",
-          width: "54%",
-          background: "rgba(8, 8, 32, 0.92)",
+          width: "80%",
+          background: "rgba(8, 8, 32, 0.95)",
           border: "3px solid rgba(255,255,255,0.85)",
           boxShadow: "3px 3px 0 0 rgba(0,0,0,0.8)",
-          padding: "0.6rem 0.75rem 0.5rem",
+          padding: "0.6rem 0.75rem 0.65rem",
+          textAlign: "center",
         }}>
-          {/* Dialog header */}
           <div style={{ fontSize: "0.38rem", color: "#fff", marginBottom: "0.5rem", letterSpacing: "0.05em" }}>
             ▶ SCAN TO JOIN THE PARTY
           </div>
 
-          {/* QR + side text layout */}
-          <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
-            {/* QR code */}
-            <div style={{
-              background: "#ffd700",
-              padding: 5,
-              border: "2px solid #000",
-              flexShrink: 0,
-              lineHeight: 0,
-            }}>
+          <div style={{ display: "flex", justifyContent: "center", marginBottom: "0.4rem", lineHeight: 0 }}>
+            <div style={{ background: "#ffd700", padding: 6, border: "2px solid #000" }}>
               {mounted && portalUrl ? (
-                <QRCodeCanvas url={portalUrl} size={80} />
+                <QRCodeCanvas url={portalUrl} size={360} />
               ) : (
-                <div style={{ width: 80, height: 80, background: "#0d0d2b" }} />
+                <div style={{ width: 360, height: 360, background: "#0d0d2b" }} />
               )}
             </div>
+          </div>
 
-            {/* Side text */}
-            <div style={{ fontSize: "0.32rem", color: "#fff", lineHeight: 2 }}>
-              <div style={{ color: "#ffd700", marginBottom: "0.2rem", fontSize: "0.35rem" }}>
-                ☞ MUSICIAN
-              </div>
-              <div style={{ color: "#ffd700", marginBottom: "0.4rem", fontSize: "0.35rem" }}>
-                &nbsp;&nbsp;OR SINGER
-              </div>
-              <div style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.28rem", lineHeight: 1.6, wordBreak: "break-all" }}>
-                {portalUrl || "level-40-portal.vercel.app/join"}
-              </div>
-            </div>
+          <div style={{ color: "#ffd700", fontSize: "0.35rem", marginBottom: "0.15rem" }}>
+            ☞ MUSICIAN OR SINGER
+          </div>
+          <div style={{ color: "rgba(255,255,255,0.45)", fontSize: "0.27rem", wordBreak: "break-all" }}>
+            {portalUrl || "level-40-portal.vercel.app"}
           </div>
         </div>
 
         {/* CONTINUE? Y/N badge — matches original poster position, bottom-right of dialog */}
         <div style={{
           position: "absolute",
-          top: "82%",
+          top: "86%",
           right: "4%",
           background: "rgba(8, 8, 32, 0.92)",
           border: "3px solid rgba(255,255,255,0.85)",
