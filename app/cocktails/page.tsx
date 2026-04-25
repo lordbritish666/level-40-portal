@@ -6,7 +6,7 @@ import Link from "next/link"
 const cocktails = [
   {
     id: "phoenix-down",
-    file: "/cocktails/phoenix-down.jpg",
+    file: "/cocktails/phoenix-down.png",
     name: "PHOENIX DOWN",
     subtitle: "Corpse Reviver No. 1",
     tagline: "REVIVE. RESET. GO AGAIN.",
@@ -14,7 +14,7 @@ const cocktails = [
   },
   {
     id: "hp-tonic",
-    file: "/cocktails/hp-tonic.jpg",
+    file: "/cocktails/hp-tonic.png",
     name: "HP TONIC",
     subtitle: "Gin & Tonic",
     tagline: "HEAL. HYDRATE. KEEP GOING.",
@@ -22,7 +22,7 @@ const cocktails = [
   },
   {
     id: "peaceful-days",
-    file: "/cocktails/peaceful-days.jpg",
+    file: "/cocktails/peaceful-days.png",
     name: "PEACEFUL DAYS",
     subtitle: "Piña Colada",
     tagline: "REST. RELAX. FULL CHILL.",
@@ -30,7 +30,7 @@ const cocktails = [
   },
   {
     id: "mp-refill",
-    file: "/cocktails/mp-refill.jpg",
+    file: "/cocktails/mp-refill.png",
     name: "MP REFILL",
     subtitle: "Mocktail",
     tagline: "RECHARGE. RECAST. REPEAT.",
