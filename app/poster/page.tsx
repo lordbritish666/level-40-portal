@@ -100,78 +100,50 @@ export default function PosterPage() {
         )}
       </div>
 
-      {/* POSTER — image + QR overlay */}
-      <div
-        id="poster"
-        style={{
-          position: "relative",
-          width: "min(480px, 92vw)",
-          aspectRatio: "480 / 720",
-          fontFamily: "var(--font-pixel), monospace",
-          imageRendering: "pixelated",
-          flexShrink: 0,
-        }}
-      >
-        {/* Actual poster image */}
-        <Image
-          src="/poster.jpg"
-          alt="Level 40 Unlocked"
-          fill
-          style={{ objectFit: "cover", imageRendering: "pixelated" }}
-          priority
-        />
+      {/* POSTER + QR — stacked layout */}
+      <div id="poster" style={{ width: "min(480px, 92vw)", fontFamily: "var(--font-pixel), monospace", flexShrink: 0 }}>
 
-        {/* QR overlay — replaces the JOIN THE PARTY dialog box */}
+        {/* Poster image */}
+        <div style={{ lineHeight: 0, border: "4px solid #ffd700", borderBottom: "none" }}>
+          <Image
+            src="/poster.jpg"
+            alt="Level 40 Unlocked"
+            width={480}
+            height={720}
+            style={{ width: "100%", height: "auto", display: "block", imageRendering: "pixelated" }}
+            priority
+          />
+        </div>
+
+        {/* QR strip below poster */}
         <div style={{
-          position: "absolute",
-          top: "60%",
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "80%",
-          background: "rgba(8, 8, 32, 0.95)",
-          border: "3px solid rgba(255,255,255,0.85)",
-          boxShadow: "3px 3px 0 0 rgba(0,0,0,0.8)",
-          padding: "0.6rem 0.75rem 0.65rem",
-          textAlign: "center",
+          background: "#080820",
+          border: "4px solid #ffd700",
+          padding: "1.25rem 1rem",
+          display: "flex",
+          alignItems: "center",
+          gap: "1.25rem",
         }}>
-          <div style={{ fontSize: "0.38rem", color: "#fff", marginBottom: "0.5rem", letterSpacing: "0.05em" }}>
-            ▶ SCAN TO JOIN THE PARTY
+          <div style={{ background: "#ffd700", padding: 8, border: "3px solid #000", lineHeight: 0, flexShrink: 0 }}>
+            {mounted && portalUrl ? (
+              <QRCodeCanvas url={portalUrl} size={200} />
+            ) : (
+              <div style={{ width: 200, height: 200, background: "#0d0d2b" }} />
+            )}
           </div>
-
-          <div style={{ display: "flex", justifyContent: "center", marginBottom: "0.4rem", lineHeight: 0 }}>
-            <div style={{ background: "#ffd700", padding: 6, border: "2px solid #000" }}>
-              {mounted && portalUrl ? (
-                <QRCodeCanvas url={portalUrl} size={360} />
-              ) : (
-                <div style={{ width: 360, height: 360, background: "#0d0d2b" }} />
-              )}
+          <div>
+            <div style={{ fontSize: "0.55rem", color: "#ffd700", marginBottom: "0.5rem", lineHeight: 1.6 }}>
+              ▶ SCAN TO<br />JOIN THE PARTY
+            </div>
+            <div style={{ fontSize: "0.4rem", color: "#aaa", marginBottom: "0.4rem", lineHeight: 1.8 }}>
+              ☞ SIGN UP AS<br />MUSICIAN OR SINGER
+            </div>
+            <div style={{ fontSize: "0.3rem", color: "#555", wordBreak: "break-all" }}>
+              {portalUrl || "level-40-portal.vercel.app"}
             </div>
           </div>
-
-          <div style={{ color: "#ffd700", fontSize: "0.35rem", marginBottom: "0.15rem" }}>
-            ☞ MUSICIAN OR SINGER
-          </div>
-          <div style={{ color: "rgba(255,255,255,0.45)", fontSize: "0.27rem", wordBreak: "break-all" }}>
-            {portalUrl || "level-40-portal.vercel.app"}
-          </div>
         </div>
 
-        {/* CONTINUE? Y/N badge — matches original poster position, bottom-right of dialog */}
-        <div style={{
-          position: "absolute",
-          top: "86%",
-          right: "4%",
-          background: "rgba(8, 8, 32, 0.92)",
-          border: "3px solid rgba(255,255,255,0.85)",
-          boxShadow: "3px 3px 0 0 rgba(0,0,0,0.8)",
-          padding: "0.3rem 0.45rem",
-          fontSize: "0.32rem",
-          color: "#fff",
-          textAlign: "center",
-          lineHeight: 1.8,
-        }}>
-          CONTINUE?<br />Y / N
-        </div>
       </div>
 
       {/* Print hint */}
