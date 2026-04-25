@@ -1,7 +1,10 @@
 "use client"
 import Link from "next/link"
 
-const ROOMS = [
+interface Area { name: string; icon: string; items: string[]; note?: string }
+interface Zone { zone: string; color: string; borderColor: string; icon: string; areas: Area[]; note?: string }
+
+const ROOMS: Zone[] = [
   {
     zone: "ENTRANCE ROOM",
     color: "#9966ff",
