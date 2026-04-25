@@ -28,14 +28,6 @@ const cocktails = [
     tagline: "REST. RELAX. FULL CHILL.",
     color: "#ffdd44",
   },
-  {
-    id: "mp-refill",
-    file: "/cocktails/mp-refill.png",
-    name: "MP REFILL",
-    subtitle: "Mocktail",
-    tagline: "RECHARGE. RECAST. REPEAT.",
-    color: "#dd44ff",
-  },
 ]
 
 export default function CocktailsPage() {
