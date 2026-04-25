@@ -4,6 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 
 const ROOMS = [
+  { id: "overworld", file: "/rooms/overworld.png", name: "THE OVERWORLD STAGE" },
   { id: "entrance-room", file: "/rooms/entrance-room.png", name: "ENTRANCE ROOM" },
   { id: "loot-drops", file: "/rooms/loot-drops.png", name: "LOOT DROPS" },
   { id: "inn-tavern", file: "/rooms/inn-tavern.png", name: "THE INN & TAVERN" },
