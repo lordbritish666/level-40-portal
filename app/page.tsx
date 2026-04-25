@@ -27,32 +27,33 @@ export default function Home() {
       </div>
 
       {/* Main card */}
-      <div className="pixel-card" style={{ maxWidth: 380, width: "100%", padding: "1.75rem", marginBottom: "1.5rem" }}>
+      <div className="pixel-card" style={{ maxWidth: 380, width: "100%", padding: "1.75rem" }}>
         <div className="text-center" style={{ marginBottom: "1.5rem" }}>
           <div className="blink" style={{ fontSize: "0.8rem", color: "#fff", letterSpacing: "0.15em" }}>
             ▶ INSERT COIN
           </div>
         </div>
-        <Link href="/join">
-          <button className="pixel-btn" style={{
-            width: "100%",
-            background: "#ffd700",
-            color: "#000",
-            fontSize: "0.75rem",
-            padding: "1rem",
-          }}>
-            ENTER THE PARTY
-          </button>
-        </Link>
+        <div className="flex flex-col gap-3">
+          <Link href="/join">
+            <button className="pixel-btn" style={{ width: "100%", background: "#ffd700", color: "#000", fontSize: "0.75rem", padding: "1rem" }}>
+              ENTER THE PARTY
+            </button>
+          </Link>
+          <Link href="/stage">
+            <button className="pixel-btn" style={{ width: "100%", background: "#00ff88", color: "#000", fontSize: "0.65rem", padding: "0.85rem" }}>
+              🎵 STAGE &amp; VOTING
+            </button>
+          </Link>
+          <Link href="/cocktails">
+            <button className="pixel-btn" style={{ width: "100%", background: "#ff88cc", color: "#000", fontSize: "0.65rem", padding: "0.85rem" }}>
+              🍹 COCKTAIL MENU
+            </button>
+          </Link>
+        </div>
       </div>
 
-      {/* Bottom links */}
-      <div className="flex gap-4 flex-wrap justify-center" style={{ fontSize: "0.5rem" }}>
-        <Link href="/stage" style={{ color: "#00ff88", textDecoration: "none" }}>▶ STAGE &amp; VOTING</Link>
-        <span style={{ color: "#444" }}>|</span>
-        <Link href="/cocktails" style={{ color: "#ff88cc", textDecoration: "none" }}>▶ COCKTAIL MENU</Link>
-        <span style={{ color: "#444" }}>|</span>
-        <Link href="/admin" style={{ color: "#888", textDecoration: "none" }}>▶ HOST ADMIN</Link>
+      <div style={{ marginTop: "1.25rem" }}>
+        <Link href="/admin" style={{ fontSize: "0.4rem", color: "#444", textDecoration: "none" }}>▶ HOST ADMIN</Link>
       </div>
 
     </div>
