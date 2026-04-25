@@ -126,7 +126,7 @@ export default function AdminPage() {
             value={password}
             onChange={e => setPassword(e.target.value)}
             onKeyDown={e => {
-              if (e.key === "Enter" && password === "level40") {
+              if (e.key === "Enter" && password === "666") {
                 sessionStorage.setItem(ADMIN_KEY, "true")
                 setAuth(true)
               }
@@ -137,7 +137,7 @@ export default function AdminPage() {
             className="pixel-btn"
             style={{ width: "100%", background: "#ffd700", color: "#000", fontSize: "0.6rem", padding: "0.75rem" }}
             onClick={() => {
-              if (password === "level40") {
+              if (password === "666") {
                 sessionStorage.setItem(ADMIN_KEY, "true")
                 setAuth(true)
               }
@@ -146,7 +146,7 @@ export default function AdminPage() {
             ENTER ▶
           </button>
           <div style={{ fontSize: "0.4rem", color: "#444", marginTop: "1rem", textAlign: "center" }}>
-            DEFAULT: level40
+            DEFAULT: 666
           </div>
         </div>
         <Link href="/" style={{ fontSize: "0.45rem", color: "#666", marginTop: "1.5rem", textDecoration: "none" }}>← BACK</Link>
@@ -232,7 +232,7 @@ export default function AdminPage() {
                 <div className="flex flex-wrap gap-2" style={{ marginBottom: "1rem" }}>
                   {live.band.map(m => (
                     <span key={m.id} className="pixel-panel" style={{ fontSize: "0.45rem", padding: "0.3rem 0.5rem" }}>
-                      {INSTRUMENT_ICONS[m.instrument]} {m.name}
+                      {m.instruments.map(i => INSTRUMENT_ICONS[i]).join("")} {m.name}
                     </span>
                   ))}
                 </div>
@@ -343,10 +343,10 @@ export default function AdminPage() {
                   <div className="flex justify-between items-center">
                     <div>
                       <div style={{ fontSize: "0.6rem", color: m.available ? "#ffd700" : "#666" }}>
-                        {INSTRUMENT_ICONS[m.instrument]} {m.name}
+                        {m.instruments.map(i => INSTRUMENT_ICONS[i]).join("")} {m.name}
                       </div>
                       <div style={{ fontSize: "0.4rem", color: "#555" }}>
-                        {INSTRUMENT_LABELS[m.instrument]}{m.canSing ? " · CAN SING" : ""}
+                        {m.instruments.map(i => INSTRUMENT_LABELS[i]).join(" · ")}{m.canSing ? " · CAN SING" : ""}
                       </div>
                     </div>
                     <button

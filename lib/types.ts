@@ -3,7 +3,7 @@ export type Instrument = 'bass' | 'drums' | 'keys' | 'guitar' | 'misc'
 export interface Musician {
   id: string
   name: string
-  instrument: Instrument
+  instruments: Instrument[]
   canSing: boolean
   available: boolean
   joinedAt: number

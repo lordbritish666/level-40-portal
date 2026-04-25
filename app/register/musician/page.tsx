@@ -8,22 +8,30 @@ const INSTRUMENTS: Instrument[] = ["bass", "drums", "keys", "guitar", "misc"]
 
 export default function MusicianRegisterPage() {
   const [name, setName] = useState("")
-  const [instrument, setInstrument] = useState<Instrument | null>(null)
+  const [instruments, setInstruments] = useState<Instrument[]>([])
   const [canSing, setCanSing] = useState(false)
   const [loading, setLoading] = useState(false)
   const [done, setDone] = useState(false)
   const [error, setError] = useState("")
 
+  function toggleInstrument(inst: Instrument) {
+    setInstruments(prev =>
+      prev.includes(inst) ? prev.filter(i => i !== inst) : [...prev, inst]
+    )
+  }
+
+  const isValid = name.trim() && instruments.length > 0
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!name.trim() || !instrument) return
+    if (!isValid) return
     setLoading(true)
     setError("")
     try {
       const res = await fetch("/api/musicians", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: name.trim(), instrument, canSing }),
+        body: JSON.stringify({ name: name.trim(), instruments, canSing }),
       })
       if (!res.ok) throw new Error(await res.text())
       setDone(true)
@@ -39,16 +47,13 @@ export default function MusicianRegisterPage() {
       <div className="min-h-screen flex flex-col items-center justify-center px-4">
         <div className="pixel-card text-center" style={{ maxWidth: 400, width: "100%", padding: "2.5rem" }}>
           <div style={{ fontSize: "2.5rem", marginBottom: "1rem" }}>✓</div>
-          <div style={{ fontSize: "0.9rem", color: "#00ff88", marginBottom: "1rem" }}>
-            REGISTERED!
-          </div>
-          <div style={{ fontSize: "0.55rem", color: "#aaa", lineHeight: 2, marginBottom: "2rem" }}>
-            {name.toUpperCase()}<br />
-            {INSTRUMENT_ICONS[instrument!]} {INSTRUMENT_LABELS[instrument!].toUpperCase()}
+          <div style={{ fontSize: "0.9rem", color: "#00ff88", marginBottom: "1rem" }}>REGISTERED!</div>
+          <div style={{ fontSize: "0.55rem", color: "#ffd700", marginBottom: "0.25rem" }}>{name.toUpperCase()}</div>
+          <div style={{ fontSize: "0.5rem", color: "#aaa", marginBottom: "1.5rem" }}>
+            {instruments.map(i => `${INSTRUMENT_ICONS[i]} ${INSTRUMENT_LABELS[i]}`).join(" · ").toUpperCase()}
           </div>
           <div style={{ fontSize: "0.5rem", color: "#ffd700", marginBottom: "1.5rem" }}>
-            YOU&apos;RE IN THE BAND ROSTER.<br />
-            AWAIT YOUR CALL TO THE STAGE!
+            YOU&apos;RE IN THE BAND ROSTER.<br />AWAIT YOUR CALL TO THE STAGE!
           </div>
           <div className="flex flex-col gap-3">
             <Link href="/stage">
@@ -99,32 +104,38 @@ export default function MusicianRegisterPage() {
             />
           </div>
 
-          {/* Instrument */}
+          {/* Instruments — multi-select */}
           <div style={{ marginBottom: "1.5rem" }}>
-            <label style={{ fontSize: "0.55rem", color: "#888", display: "block", marginBottom: "0.75rem" }}>
-              YOUR INSTRUMENT
+            <label style={{ fontSize: "0.55rem", color: "#888", display: "block", marginBottom: "0.25rem" }}>
+              YOUR INSTRUMENT(S)
             </label>
+            <div style={{ fontSize: "0.4rem", color: "#555", marginBottom: "0.75rem" }}>
+              SELECT ALL THAT APPLY
+            </div>
             <div className="flex flex-col gap-2">
-              {INSTRUMENTS.map(inst => (
-                <button
-                  key={inst}
-                  type="button"
-                  onClick={() => setInstrument(inst)}
-                  className="pixel-btn"
-                  style={{
-                    background: instrument === inst ? "#ffd700" : "#1a1a4e",
-                    color: instrument === inst ? "#000" : "#ffd700",
-                    border: `4px solid ${instrument === inst ? "#000" : "#ffd700"}`,
-                    boxShadow: instrument === inst ? "4px 4px 0 0 #000" : "4px 4px 0 0 #333",
-                    padding: "0.75rem 1rem",
-                    fontSize: "0.6rem",
-                    textAlign: "left",
-                    width: "100%",
-                  }}
-                >
-                  {INSTRUMENT_ICONS[inst]} {INSTRUMENT_LABELS[inst].toUpperCase()}
-                </button>
-              ))}
+              {INSTRUMENTS.map(inst => {
+                const selected = instruments.includes(inst)
+                return (
+                  <button
+                    key={inst}
+                    type="button"
+                    onClick={() => toggleInstrument(inst)}
+                    className="pixel-btn"
+                    style={{
+                      background: selected ? "#ffd700" : "#1a1a4e",
+                      color: selected ? "#000" : "#ffd700",
+                      border: `4px solid ${selected ? "#000" : "#ffd700"}`,
+                      boxShadow: selected ? "4px 4px 0 0 #000" : "4px 4px 0 0 #333",
+                      padding: "0.75rem 1rem",
+                      fontSize: "0.6rem",
+                      textAlign: "left",
+                      width: "100%",
+                    }}
+                  >
+                    {selected ? "✓ " : "○ "}{INSTRUMENT_ICONS[inst]} {INSTRUMENT_LABELS[inst].toUpperCase()}
+                  </button>
+                )
+              })}
             </div>
           </div>
 
@@ -156,16 +167,16 @@ export default function MusicianRegisterPage() {
 
           <button
             type="submit"
-            disabled={!name.trim() || !instrument || loading}
+            disabled={!isValid || loading}
             className="pixel-btn"
             style={{
               width: "100%",
-              background: !name.trim() || !instrument ? "#333" : "#ffd700",
-              color: !name.trim() || !instrument ? "#666" : "#000",
+              background: !isValid ? "#333" : "#ffd700",
+              color: !isValid ? "#666" : "#000",
               border: "4px solid #000",
               fontSize: "0.7rem",
               padding: "1rem",
-              cursor: !name.trim() || !instrument ? "not-allowed" : "pointer",
+              cursor: !isValid ? "not-allowed" : "pointer",
             }}
           >
             {loading ? "REGISTERING..." : "JOIN THE ROSTER ▶"}

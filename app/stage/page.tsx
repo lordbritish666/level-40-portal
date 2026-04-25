@@ -104,8 +104,8 @@ export default function StagePage() {
             <div className="flex flex-wrap gap-2">
               {data.live.band.map(m => (
                 <div key={m.id} className="pixel-panel" style={{ padding: "0.4rem 0.6rem", fontSize: "0.45rem" }}>
-                  {INSTRUMENT_ICONS[m.instrument]} {m.name.toUpperCase()}
-                  <span style={{ color: "#666", marginLeft: "0.25rem" }}>({INSTRUMENT_LABELS[m.instrument]})</span>
+                  {m.instruments.map(i => INSTRUMENT_ICONS[i]).join("")} {m.name.toUpperCase()}
+                  <span style={{ color: "#666", marginLeft: "0.25rem" }}>({m.instruments.map(i => INSTRUMENT_LABELS[i]).join(", ")})</span>
                 </div>
               ))}
               {data.live.band.length === 0 && (
@@ -256,8 +256,10 @@ function MusicianRoster() {
   }
 
   const byInstrument = musicians.reduce((acc, m) => {
-    if (!acc[m.instrument]) acc[m.instrument] = []
-    acc[m.instrument].push(m)
+    for (const inst of m.instruments) {
+      if (!acc[inst]) acc[inst] = []
+      if (!acc[inst].find(x => x.id === m.id)) acc[inst].push(m)
+    }
     return acc
   }, {} as Record<string, typeof musicians>)
 

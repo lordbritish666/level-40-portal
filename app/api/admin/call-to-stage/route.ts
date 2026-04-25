@@ -1,25 +1,32 @@
 import { NextRequest, NextResponse } from "next/server"
 import { v4 as uuid } from "uuid"
 import { getSingers, getMusicians, getPerformances, addPerformance } from "@/lib/kv"
-import type { Performance } from "@/lib/types"
+import type { Musician, Performance } from "@/lib/types"
 
-// Randomly assigns a band from available musicians, trying to cover all instrument types
-function assembleBand(musicians: import("@/lib/types").Musician[]) {
+// Randomly assigns a band covering as many instrument types as possible, no duplicate musicians
+function assembleBand(musicians: Musician[]) {
   const available = musicians.filter(m => m.available)
 
-  // Group by instrument
-  const byInstrument = available.reduce((acc, m) => {
-    if (!acc[m.instrument]) acc[m.instrument] = []
-    acc[m.instrument].push(m)
-    return acc
-  }, {} as Record<string, typeof available>)
+  // Build instrument → musicians map (a musician appears in each of their instrument groups)
+  const byInstrument: Record<string, Musician[]> = {}
+  for (const m of available) {
+    for (const inst of m.instruments) {
+      if (!byInstrument[inst]) byInstrument[inst] = []
+      byInstrument[inst].push(m)
+    }
+  }
 
-  const band: typeof available = []
+  const band: Musician[] = []
+  const usedIds = new Set<string>()
 
-  // Pick one from each instrument group (shuffle to randomize)
+  // Shuffle each group, pick one per instrument slot (skip already-picked musicians)
   for (const group of Object.values(byInstrument)) {
     const shuffled = [...group].sort(() => Math.random() - 0.5)
-    band.push(shuffled[0])
+    const pick = shuffled.find(m => !usedIds.has(m.id))
+    if (pick) {
+      band.push(pick)
+      usedIds.add(pick.id)
+    }
   }
 
   return band
@@ -39,7 +46,6 @@ export async function POST(req: NextRequest) {
   const singer = singers.find(s => s.id === singerId)
   if (!singer) return new NextResponse("Singer not found", { status: 404 })
 
-  // Check not already queued or live
   const existing = performances.find(p => p.singer.id === singerId && p.status !== "done")
   if (existing) return new NextResponse("Singer already in queue", { status: 409 })
 
@@ -48,7 +54,7 @@ export async function POST(req: NextRequest) {
   const performance: Performance = {
     id: uuid(),
     singer,
-    song: singer.songs[0], // will be updated when promoted to live
+    song: singer.songs[0],
     band,
     status: "queued",
     votes: 0,

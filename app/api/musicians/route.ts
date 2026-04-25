@@ -10,16 +10,16 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   const body = await req.json()
-  const { name, instrument, canSing } = body
+  const { name, instruments, canSing } = body
 
-  if (!name || !instrument) {
-    return new NextResponse("Name and instrument required", { status: 400 })
+  if (!name || !Array.isArray(instruments) || instruments.length === 0) {
+    return new NextResponse("Name and at least one instrument required", { status: 400 })
   }
 
   const musician: Musician = {
     id: uuid(),
     name,
-    instrument,
+    instruments,
     canSing: !!canSing,
     available: true,
     joinedAt: Date.now(),
