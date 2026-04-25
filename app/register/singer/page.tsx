@@ -189,7 +189,7 @@ export default function SingerRegisterPage() {
                         width: "100%",
                       }}
                     >
-                      {INSTRUMENT_ICONS[inst]} {INSTRUMENT_LABELS[inst].toUpperCase()}
+                      {INSTRUMENT_ICONS[inst] ?? '🎵'} {(INSTRUMENT_LABELS[inst] ?? inst).toUpperCase()}
                     </button>
                   ))}
                 </div>

@@ -3,7 +3,7 @@ export type Instrument = 'bass' | 'drums' | 'keys' | 'guitar' | 'misc'
 export interface Musician {
   id: string
   name: string
-  instruments: Instrument[]
+  instruments: string[]  // preset Instrument values or custom strings
   canSing: boolean
   available: boolean
   joinedAt: number
@@ -14,7 +14,7 @@ export interface Singer {
   name: string
   songs: [string, string, string]
   canPlayInstrument: boolean
-  instrument?: Instrument
+  instrument?: string
   joinedAt: number
 }
 
@@ -30,7 +30,7 @@ export interface Performance {
   createdAt: number
 }
 
-export const INSTRUMENT_LABELS: Record<Instrument, string> = {
+export const INSTRUMENT_LABELS: Record<string, string> = {
   bass: 'Bassist',
   drums: 'Drummer',
   keys: 'Keyboardist',
@@ -38,10 +38,18 @@ export const INSTRUMENT_LABELS: Record<Instrument, string> = {
   misc: 'Other Instrument',
 }
 
-export const INSTRUMENT_ICONS: Record<Instrument, string> = {
+export const INSTRUMENT_ICONS: Record<string, string> = {
   bass: '🎸',
   drums: '🥁',
   keys: '🎹',
   guitar: '🎸',
   misc: '🎵',
+}
+
+export function instIcon(inst: string): string {
+  return INSTRUMENT_ICONS[inst] ?? '🎵'
+}
+
+export function instLabel(inst: string): string {
+  return INSTRUMENT_LABELS[inst] ?? inst
 }

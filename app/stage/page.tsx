@@ -2,7 +2,7 @@
 import { useEffect, useState, useCallback } from "react"
 import Link from "next/link"
 import type { Performance, Singer } from "@/lib/types"
-import { INSTRUMENT_ICONS, INSTRUMENT_LABELS } from "@/lib/types"
+import { INSTRUMENT_ICONS, INSTRUMENT_LABELS, instIcon, instLabel } from "@/lib/types"
 
 interface StageData {
   live: Performance | null
@@ -104,8 +104,8 @@ export default function StagePage() {
             <div className="flex flex-wrap gap-2">
               {data.live.band.map(m => (
                 <div key={m.id} className="pixel-panel" style={{ padding: "0.4rem 0.6rem", fontSize: "0.45rem" }}>
-                  {m.instruments.map(i => INSTRUMENT_ICONS[i]).join("")} {m.name.toUpperCase()}
-                  <span style={{ color: "#666", marginLeft: "0.25rem" }}>({m.instruments.map(i => INSTRUMENT_LABELS[i]).join(", ")})</span>
+                  {m.instruments.map(i => instIcon(i)).join("")} {m.name.toUpperCase()}
+                  <span style={{ color: "#666", marginLeft: "0.25rem" }}>({m.instruments.map(i => instLabel(i)).join(", ")})</span>
                 </div>
               ))}
               {data.live.band.length === 0 && (
@@ -296,7 +296,7 @@ function MusicianRoster() {
         {Object.entries(byInstrument).map(([inst, ms]) => (
           <div key={inst}>
             <div style={{ fontSize: "0.4rem", color: "#666", marginBottom: "0.25rem" }}>
-              {INSTRUMENT_ICONS[inst as import("@/lib/types").Instrument]} {INSTRUMENT_LABELS[inst as import("@/lib/types").Instrument].toUpperCase()}
+              {instIcon(inst)} {instLabel(inst).toUpperCase()}
             </div>
             {ms.map(m => (
               <div key={m.id} style={{

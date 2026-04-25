@@ -2,7 +2,7 @@
 import { useEffect, useState, useCallback } from "react"
 import Link from "next/link"
 import type { Musician, Singer, Performance } from "@/lib/types"
-import { INSTRUMENT_ICONS, INSTRUMENT_LABELS } from "@/lib/types"
+import { instIcon, instLabel } from "@/lib/types"
 
 interface AdminData {
   musicians: Musician[]
@@ -234,7 +234,7 @@ export default function AdminPage() {
                 <div className="flex flex-wrap gap-2" style={{ marginBottom: "1rem" }}>
                   {live.band.map(m => (
                     <span key={m.id} className="pixel-panel" style={{ fontSize: "0.45rem", padding: "0.3rem 0.5rem" }}>
-                      {m.instruments.map(i => INSTRUMENT_ICONS[i]).join("")} {m.name}
+                      {m.instruments.map(i => instIcon(i)).join("")} {m.name}
                     </span>
                   ))}
                 </div>
@@ -348,10 +348,10 @@ export default function AdminPage() {
                   <div className="flex justify-between items-center">
                     <div>
                       <div style={{ fontSize: "0.6rem", color: m.available ? "#ffd700" : "#666" }}>
-                        {m.instruments.map(i => INSTRUMENT_ICONS[i]).join("")} {m.name}
+                        {m.instruments.map(i => instIcon(i)).join("")} {m.name}
                       </div>
                       <div style={{ fontSize: "0.4rem", color: "#555" }}>
-                        {m.instruments.map(i => INSTRUMENT_LABELS[i]).join(" · ")}{m.canSing ? " · CAN SING" : ""}
+                        {m.instruments.map(i => instLabel(i)).join(" · ")}{m.canSing ? " · CAN SING" : ""}
                       </div>
                     </div>
                     <button
