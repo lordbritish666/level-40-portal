@@ -41,7 +41,12 @@ export default function Home() {
           </Link>
           <Link href="/stage">
             <button className="pixel-btn" style={{ width: "100%", background: "#00ff88", color: "#000", fontSize: "0.65rem", padding: "0.85rem" }}>
-              🎵 STAGE &amp; VOTING
+              🎵 LIVE STAGE
+            </button>
+          </Link>
+          <Link href="/vote">
+            <button className="pixel-btn" style={{ width: "100%", background: "#ff8800", color: "#000", fontSize: "0.65rem", padding: "0.85rem" }}>
+              🗳️ VOTE FOR SONGS
             </button>
           </Link>
           <Link href="/cocktails">
