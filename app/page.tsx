@@ -49,6 +49,11 @@ export default function Home() {
               🍹 COCKTAIL MENU
             </button>
           </Link>
+          <Link href="/rooms">
+            <button className="pixel-btn" style={{ width: "100%", background: "#9966ff", color: "#fff", fontSize: "0.65rem", padding: "0.85rem" }}>
+              🗺️ VENUE MAP
+            </button>
+          </Link>
         </div>
       </div>
 
