@@ -15,7 +15,7 @@ export default function PosterPage() {
     setMounted(true)
     const saved = localStorage.getItem("poster_url")
     const origin = window.location.origin
-    const defaultUrl = saved || `${origin}/join`
+    const defaultUrl = saved || origin
     setPortalUrl(defaultUrl)
     setInputUrl(defaultUrl)
   }, [])
