@@ -18,7 +18,7 @@ export interface Singer {
   joinedAt: number
 }
 
-export type PerformanceStatus = 'queued' | 'live' | 'done'
+export type PerformanceStatus = 'queued' | 'live' | 'wrapping' | 'done'
 
 export interface Performance {
   id: string

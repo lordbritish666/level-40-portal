@@ -3,14 +3,17 @@ import { getPerformances, savePerformances, getMusicians, saveMusicians } from "
 
 export async function POST() {
   const [performances, musicians] = await Promise.all([getPerformances(), getMusicians()])
-  const liveIdx = performances.findIndex(p => p.status === "live")
-  if (liveIdx !== -1) {
-    performances[liveIdx].status = "done"
-    for (const m of performances[liveIdx].band) {
-      const musician = musicians.find(x => x.id === m.id)
-      if (musician) musician.available = true
+  let changed = false
+  for (const p of performances) {
+    if (p.status === "live" || p.status === "wrapping") {
+      p.status = "done"
+      for (const m of p.band) {
+        const musician = musicians.find(x => x.id === m.id)
+        if (musician) musician.available = true
+      }
+      changed = true
     }
-    await Promise.all([savePerformances(performances), saveMusicians(musicians)])
   }
+  if (changed) await Promise.all([savePerformances(performances), saveMusicians(musicians)])
   return NextResponse.json({ ok: true })
 }

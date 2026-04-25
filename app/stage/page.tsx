@@ -90,10 +90,12 @@ export default function StagePage() {
       {/* Currently Live */}
       {data.live ? (
         <div style={{ marginBottom: "2rem" }}>
-          <div style={{ fontSize: "0.5rem", color: "#ff4444", marginBottom: "0.75rem", letterSpacing: "0.2em" }}>
-            <span className="blink">●</span> NOW PERFORMING
+          <div style={{ fontSize: "0.5rem", color: data.live.status === "wrapping" ? "#555" : "#ff4444", marginBottom: "0.75rem", letterSpacing: "0.2em" }}>
+            {data.live.status === "wrapping"
+              ? "◼ SET COMPLETE"
+              : <><span className="blink">●</span> NOW PERFORMING</>}
           </div>
-          <div className="pixel-card march-border" style={{ padding: "1.5rem" }}>
+          <div className="pixel-card march-border" style={{ padding: "1.5rem", opacity: data.live.status === "wrapping" ? 0.4 : 1 }}>
             <div style={{ fontSize: "1.2rem", color: "#ffd700", marginBottom: "0.25rem" }}>
               {data.live.singer ? data.live.singer.name.toUpperCase() : "🎵 INSTRUMENTAL"}
             </div>

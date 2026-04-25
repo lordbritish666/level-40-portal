@@ -7,7 +7,7 @@ export async function GET(req: NextRequest) {
   const includeSingers = searchParams.get("include") === "singers"
 
   const performances = await getPerformances()
-  const live = performances.find(p => p.status === "live") ?? null
+  const live = performances.find(p => p.status === "live" || p.status === "wrapping") ?? null
   const queued = performances
     .filter(p => p.status === "queued")
     .sort((a, b) => a.createdAt - b.createdAt)

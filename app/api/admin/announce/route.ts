@@ -30,13 +30,14 @@ export async function POST(req: NextRequest) {
     getPerformances(), getMusicians(), getSingers(),
   ])
 
-  // Free up band from any current live
-  const liveIdx = performances.findIndex(p => p.status === "live")
-  if (liveIdx !== -1) {
-    performances[liveIdx].status = "done"
-    for (const m of performances[liveIdx].band) {
-      const musician = musicians.find(x => x.id === m.id)
-      if (musician) musician.available = true
+  // Clear any current live or wrapping performance
+  for (const p of performances) {
+    if (p.status === "live" || p.status === "wrapping") {
+      p.status = "done"
+      for (const m of p.band) {
+        const musician = musicians.find(x => x.id === m.id)
+        if (musician) musician.available = true
+      }
     }
   }
 

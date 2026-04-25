@@ -30,7 +30,7 @@ export default function AdminPage() {
     const [m, s, p] = await Promise.all([mRes.json(), sRes.json(), pRes.json()])
     setMusicians(m)
     setSingers(s)
-    setLive((p as Performance[]).find((x: Performance) => x.status === "live") ?? null)
+    setLive((p as Performance[]).find((x: Performance) => x.status === "live" || x.status === "wrapping") ?? null)
   }, [])
 
   useEffect(() => {
@@ -58,6 +58,13 @@ export default function AdminPage() {
     } else {
       flash("ERROR: " + await res.text())
     }
+    setBusy(false)
+  }
+
+  async function wrapUp() {
+    setBusy(true)
+    await fetch("/api/admin/wrap", { method: "POST" })
+    await fetchAll()
     setBusy(false)
   }
 
@@ -152,14 +159,26 @@ export default function AdminPage() {
               ))}
               {live.band.length === 0 && <span style={{ fontSize: "0.4rem", color: "#555" }}>NO BAND ASSIGNED</span>}
             </div>
-            <button
-              onClick={clearStage}
-              disabled={busy}
-              className="pixel-btn"
-              style={{ background: "#ff4444", color: "#fff", border: "4px solid #000", fontSize: "0.5rem", padding: "0.5rem 1rem" }}
-            >
-              ✓ DONE — CLEAR STAGE
-            </button>
+            <div className="flex gap-2">
+              {live.status === "live" && (
+                <button
+                  onClick={wrapUp}
+                  disabled={busy}
+                  className="pixel-btn"
+                  style={{ background: "#888", color: "#000", border: "4px solid #000", fontSize: "0.5rem", padding: "0.5rem 1rem" }}
+                >
+                  ⏹ WRAP UP
+                </button>
+              )}
+              <button
+                onClick={clearStage}
+                disabled={busy}
+                className="pixel-btn"
+                style={{ background: "#ff4444", color: "#fff", border: "4px solid #000", fontSize: "0.5rem", padding: "0.5rem 1rem" }}
+              >
+                ✕ CLEAR STAGE
+              </button>
+            </div>
           </div>
         ) : (
           <div className="pixel-card" style={{ padding: "1rem", opacity: 0.4 }}>
