@@ -22,8 +22,8 @@ export type PerformanceStatus = 'queued' | 'live' | 'done'
 
 export interface Performance {
   id: string
-  singer: Singer
-  song: string
+  singer?: Singer
+  title: string        // song name or set title — always set
   band: Musician[]
   status: PerformanceStatus
   votes: number

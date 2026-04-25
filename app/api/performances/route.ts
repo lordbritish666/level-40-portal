@@ -15,8 +15,9 @@ export async function GET(req: NextRequest) {
   // Attach vote counts per song for queued performances
   const queuedWithVotes = await Promise.all(
     queued.map(async p => {
+      const songCount = p.singer ? 3 : 1
       const votes = await Promise.all(
-        p.singer.songs.map((_, i) =>
+        Array.from({ length: songCount }, (_, i) =>
           kv.get<number>(`songvotes:${p.id}:${i}`).then(v => v ?? 0)
         )
       )

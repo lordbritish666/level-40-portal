@@ -95,10 +95,10 @@ export default function StagePage() {
           </div>
           <div className="pixel-card march-border" style={{ padding: "1.5rem" }}>
             <div style={{ fontSize: "1.2rem", color: "#ffd700", marginBottom: "0.25rem" }}>
-              {data.live.singer.name.toUpperCase()}
+              {data.live.singer ? data.live.singer.name.toUpperCase() : "🎵 INSTRUMENTAL"}
             </div>
             <div style={{ fontSize: "0.7rem", color: "#00ff88", marginBottom: "1.25rem" }}>
-              ♪ {data.live.song}
+              ♪ {data.live.title}
             </div>
             <div style={{ fontSize: "0.45rem", color: "#888", marginBottom: "0.5rem" }}>THE BAND:</div>
             <div className="flex flex-wrap gap-2">
@@ -141,7 +141,7 @@ export default function StagePage() {
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "0.75rem" }}>
                     <div>
                       <div style={{ fontSize: "0.65rem", color: qi === 0 ? "#ffaa00" : "#aaa" }}>
-                        {qi === 0 ? "▶ NEXT UP:" : `#${qi + 2}`} {perf.singer.name.toUpperCase()}
+                        {qi === 0 ? "▶ NEXT UP:" : `#${qi + 2}`} {perf.singer ? perf.singer.name.toUpperCase() : "🎵 INSTRUMENTAL"}
                       </div>
                     </div>
                     <div style={{ fontSize: "0.45rem", color: "#666" }}>
@@ -149,12 +149,12 @@ export default function StagePage() {
                     </div>
                   </div>
 
-                  <div style={{ fontSize: "0.45rem", color: "#888", marginBottom: "0.5rem" }}>
+                  {perf.singer && <div style={{ fontSize: "0.45rem", color: "#888", marginBottom: "0.5rem" }}>
                     {voted !== undefined ? "YOU VOTED — RESULTS:" : "VOTE FOR A SONG:"}
-                  </div>
+                  </div>}
 
                   <div className="flex flex-col gap-2">
-                    {perf.singer.songs.map((song, si) => {
+                    {(perf.singer?.songs ?? [perf.title]).map((song, si) => {
                       const songVotes = ((perf as Performance & { songVotes?: number[] }).songVotes ?? [0, 0, 0])[si] ?? 0
                       const pct = totalVotes > 0 ? Math.round((songVotes / totalVotes) * 100) : 0
                       const isMyVote = voted === String(si)

@@ -157,7 +157,7 @@ export default function AdminPage() {
   const live = data.performances.find(p => p.status === "live")
   const queued = data.performances.filter(p => p.status === "queued")
   const done = data.performances.filter(p => p.status === "done")
-  const singersDone = new Set(data.performances.map(p => p.singer.id))
+  const singersDone = new Set(data.performances.map(p => p.singer?.id).filter(Boolean))
   const singersNotQueued = data.singers.filter(s => !singersDone.has(s.id))
 
   return (
@@ -227,8 +227,10 @@ export default function AdminPage() {
             </div>
             {live ? (
               <div className="pixel-card" style={{ padding: "1.25rem" }}>
-                <div style={{ fontSize: "0.75rem", color: "#ffd700", marginBottom: "0.25rem" }}>{live.singer.name}</div>
-                <div style={{ fontSize: "0.6rem", color: "#00ff88", marginBottom: "0.75rem" }}>♪ {live.song}</div>
+                <div style={{ fontSize: "0.75rem", color: "#ffd700", marginBottom: "0.25rem" }}>
+                  {live.singer ? live.singer.name : "🎵 INSTRUMENTAL"}
+                </div>
+                <div style={{ fontSize: "0.6rem", color: "#00ff88", marginBottom: "0.75rem" }}>♪ {live.title}</div>
                 <div className="flex flex-wrap gap-2" style={{ marginBottom: "1rem" }}>
                   {live.band.map(m => (
                     <span key={m.id} className="pixel-panel" style={{ fontSize: "0.45rem", padding: "0.3rem 0.5rem" }}>
@@ -264,14 +266,14 @@ export default function AdminPage() {
                     <div className="flex justify-between items-start">
                       <div>
                         <div style={{ fontSize: "0.6rem", color: qi === 0 ? "#ffaa00" : "#aaa", marginBottom: "0.25rem" }}>
-                          #{qi + 1} {perf.singer.name}
+                          #{qi + 1} {perf.singer ? perf.singer.name : "🎵 INSTRUMENTAL"}
                         </div>
                         <div style={{ fontSize: "0.45rem", color: "#666", lineHeight: 1.7 }}>
-                          {perf.singer.songs.map((s, si) => (
+                          {perf.singer ? perf.singer.songs.map((s, si) => (
                             <span key={si} style={{ color: si === topSong && totalVotes > 0 ? "#00ff88" : "#666", marginRight: "0.5rem" }}>
                               {si === topSong && totalVotes > 0 ? "▶" : "·"} {s} ({sv[si] ?? 0}v)
                             </span>
-                          ))}
+                          )) : <span style={{ color: "#888" }}>♪ {perf.title}</span>}
                         </div>
                       </div>
                       {qi === 0 && !live && (
@@ -298,7 +300,7 @@ export default function AdminPage() {
 
           {/* Add singer to queue */}
           {singersNotQueued.length > 0 && (
-            <div>
+            <div style={{ marginBottom: "1.5rem" }}>
               <div style={{ fontSize: "0.5rem", color: "#888", marginBottom: "0.5rem" }}>
                 ADD TO QUEUE ({singersNotQueued.length} NOT QUEUED)
               </div>
@@ -325,6 +327,9 @@ export default function AdminPage() {
               </div>
             </div>
           )}
+
+          {/* Queue instrumental */}
+          <InstrumentalQueue onQueued={() => { flash("INSTRUMENTAL QUEUED!"); fetchAll() }} />
         </div>
       )}
 
@@ -378,7 +383,7 @@ export default function AdminPage() {
           </div>
           <div className="flex flex-col gap-2">
             {data.singers.map(s => {
-              const perf = data.performances.find(p => p.singer.id === s.id)
+              const perf = data.performances.find(p => p.singer?.id === s.id)
               return (
                 <div key={s.id} className="pixel-card" style={{ padding: "0.9rem", borderColor: perf?.status === "done" ? "#333" : perf?.status === "live" ? "#ff4444" : "#2a2a5e" }}>
                   <div style={{ fontSize: "0.6rem", color: "#aaa", marginBottom: "0.25rem" }}>{s.name}</div>
@@ -413,6 +418,69 @@ export default function AdminPage() {
           SYNCING...
         </div>
       )}
+    </div>
+  )
+}
+
+function InstrumentalQueue({ onQueued }: { onQueued: () => void }) {
+  const [open, setOpen] = useState(false)
+  const [title, setTitle] = useState("")
+  const [loading, setLoading] = useState(false)
+
+  async function queue() {
+    if (!title.trim()) return
+    setLoading(true)
+    const res = await fetch("/api/admin/call-to-stage", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title: title.trim() }),
+    })
+    setLoading(false)
+    if (res.ok) { setTitle(""); setOpen(false); onQueued() }
+  }
+
+  if (!open) return (
+    <div>
+      <div style={{ fontSize: "0.5rem", color: "#888", marginBottom: "0.5rem" }}>INSTRUMENTAL / BAND ONLY</div>
+      <button
+        onClick={() => setOpen(true)}
+        className="pixel-btn"
+        style={{ background: "#1a1a4e", color: "#4488ff", border: "4px solid #4488ff", fontSize: "0.5rem", padding: "0.6rem 1rem" }}
+      >
+        🎵 QUEUE INSTRUMENTAL ▶
+      </button>
+    </div>
+  )
+
+  return (
+    <div className="pixel-card" style={{ padding: "1rem", borderColor: "#4488ff" }}>
+      <div style={{ fontSize: "0.5rem", color: "#4488ff", marginBottom: "0.75rem" }}>🎵 INSTRUMENTAL SET</div>
+      <input
+        className="pixel-input"
+        style={{ borderColor: "#4488ff", marginBottom: "0.75rem" }}
+        placeholder="SET TITLE OR SONG NAME..."
+        value={title}
+        onChange={e => setTitle(e.target.value)}
+        onKeyDown={e => e.key === "Enter" && queue()}
+        autoFocus
+      />
+      <div className="flex gap-2">
+        <button
+          onClick={queue}
+          disabled={!title.trim() || loading}
+          className="pixel-btn"
+          style={{ background: "#4488ff", color: "#fff", border: "4px solid #000", fontSize: "0.5rem", padding: "0.5rem 0.75rem", flex: 1 }}
+        >
+          {loading ? "QUEUING..." : "QUEUE ▶"}
+        </button>
+        <button
+          onClick={() => setOpen(false)}
+          className="pixel-btn"
+          style={{ background: "#333", color: "#888", border: "4px solid #000", fontSize: "0.5rem", padding: "0.5rem 0.75rem" }}
+        >
+          CANCEL
+        </button>
+      </div>
     </div>
   )
 }
