@@ -8,7 +8,7 @@ const INSTRUMENTS: Instrument[] = ["bass", "drums", "keys", "guitar", "misc"]
 
 export default function SingerRegisterPage() {
   const [name, setName] = useState("")
-  const [songs, setSongs] = useState<[string, string, string]>(["", "", ""])
+  const [songs, setSongs] = useState(["", "", ""])
   const [canPlay, setCanPlay] = useState(false)
   const [instrument, setInstrument] = useState<Instrument | null>(null)
   const [loading, setLoading] = useState(false)
@@ -16,12 +16,12 @@ export default function SingerRegisterPage() {
   const [error, setError] = useState("")
 
   function updateSong(index: number, value: string) {
-    const updated = [...songs] as [string, string, string]
+    const updated = [...songs]
     updated[index] = value
     setSongs(updated)
   }
 
-  const isValid = name.trim() && songs[0].trim() && songs[1].trim() && songs[2].trim()
+  const isValid = name.trim() && songs[0].trim()
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -34,7 +34,7 @@ export default function SingerRegisterPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: name.trim(),
-          songs: songs.map(s => s.trim()) as [string, string, string],
+          songs: songs.map(s => s.trim()).filter(Boolean),
           canPlayInstrument: canPlay,
           instrument: canPlay ? instrument : undefined,
         }),
@@ -60,7 +60,7 @@ export default function SingerRegisterPage() {
             {name.toUpperCase()}
           </div>
           <div style={{ marginBottom: "1.5rem" }}>
-            {songs.map((song, i) => (
+            {songs.filter(Boolean).map((song, i) => (
               <div key={i} style={{ fontSize: "0.5rem", color: "#aaa", lineHeight: 2 }}>
                 SONG {i + 1}: {song.toUpperCase()}
               </div>
@@ -124,26 +124,26 @@ export default function SingerRegisterPage() {
           {/* Songs */}
           <div style={{ marginBottom: "1.5rem" }}>
             <label style={{ fontSize: "0.55rem", color: "#888", display: "block", marginBottom: "0.5rem" }}>
-              YOUR 3 SONGS
+              YOUR SONG(S)
             </label>
             <div style={{ fontSize: "0.45rem", color: "#666", marginBottom: "0.75rem", lineHeight: 1.8 }}>
-              PICK 3 SONGS YOU WANT TO PERFORM.<br />
-              GUESTS WILL VOTE FOR WHICH ONE.
+              ADD UP TO 3 SONGS — GUESTS VOTE FOR WHICH ONE.<br />
+              ONLY SONG 1 IS REQUIRED.
             </div>
             {([0, 1, 2] as const).map(i => (
               <div key={i} style={{ marginBottom: "0.75rem" }}>
-                <div style={{ fontSize: "0.45rem", color: "#888", marginBottom: "0.25rem" }}>
-                  SONG {i + 1} {i === 0 ? "(1ST CHOICE)" : i === 1 ? "(2ND CHOICE)" : "(3RD CHOICE)"}
+                <div style={{ fontSize: "0.45rem", color: i === 0 ? "#888" : "#555", marginBottom: "0.25rem" }}>
+                  SONG {i + 1} {i === 0 ? "(REQUIRED)" : "(OPTIONAL)"}
                 </div>
                 <input
                   className="pixel-input"
-                  style={{ borderColor: "#00ff88", fontSize: "0.6rem" }}
+                  style={{ borderColor: i === 0 ? "#00ff88" : "#336633", fontSize: "0.6rem" }}
                   type="text"
-                  placeholder={`SONG ${i + 1} TITLE...`}
+                  placeholder={i === 0 ? "SONG TITLE..." : `OPTIONAL SONG ${i + 1}...`}
                   value={songs[i]}
                   onChange={e => updateSong(i, e.target.value)}
                   maxLength={60}
-                  required
+                  required={i === 0}
                 />
               </div>
             ))}

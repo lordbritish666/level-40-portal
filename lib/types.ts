@@ -12,7 +12,7 @@ export interface Musician {
 export interface Singer {
   id: string
   name: string
-  songs: [string, string, string]
+  songs: string[]  // 1–3 songs
   canPlayInstrument: boolean
   instrument?: string
   joinedAt: number
