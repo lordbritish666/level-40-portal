@@ -12,14 +12,14 @@ export async function POST(req: NextRequest) {
   const body = await req.json()
   const { name, songs, canPlayInstrument, instrument } = body
 
-  if (!name || !Array.isArray(songs) || songs.length !== 3 || songs.some((s: string) => !s?.trim())) {
-    return new NextResponse("Name and 3 songs required", { status: 400 })
+  if (!name || !Array.isArray(songs) || songs.length < 1 || songs.length > 3 || songs.some((s: string) => !s?.trim())) {
+    return new NextResponse("Name and at least 1 song required", { status: 400 })
   }
 
   const singer: Singer = {
     id: uuid(),
     name,
-    songs: songs as [string, string, string],
+    songs: songs as string[],
     canPlayInstrument: !!canPlayInstrument,
     instrument: canPlayInstrument ? instrument : undefined,
     joinedAt: Date.now(),
