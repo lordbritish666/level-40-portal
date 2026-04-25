@@ -215,6 +215,33 @@ export default function StagePage() {
         </div>
       )}
 
+      {/* Singer list */}
+      {data.singers.length > 0 && (
+        <div style={{ marginBottom: "2rem" }}>
+          <div style={{ fontSize: "0.5rem", color: "#888", marginBottom: "0.75rem", letterSpacing: "0.2em" }}>
+            REGISTERED SINGERS
+          </div>
+          <div className="pixel-card" style={{ padding: "1rem" }}>
+            <div className="flex flex-col gap-2">
+              {data.singers.map(s => {
+                const inQueue = data.queued.some(p => p.singer?.id === s.id)
+                const isLive = data.live?.singer?.id === s.id
+                return (
+                  <div key={s.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <span style={{ fontSize: "0.5rem", color: isLive ? "#ffd700" : inQueue ? "#ffaa00" : "#aaa" }}>
+                      {isLive ? "🎤 " : inQueue ? "⏳ " : "○ "}{s.name.toUpperCase()}
+                    </span>
+                    <span style={{ fontSize: "0.4rem", color: isLive ? "#ff4444" : inQueue ? "#ffaa00" : "#555" }}>
+                      {isLive ? "ON STAGE" : inQueue ? "IN QUEUE" : "WAITING"}
+                    </span>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Registered musicians */}
       <div style={{ marginBottom: "2rem" }}>
         <div style={{ fontSize: "0.5rem", color: "#888", marginBottom: "0.75rem", letterSpacing: "0.2em" }}>
