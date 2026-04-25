@@ -1,26 +1,237 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-pixel: "Press Start 2P", monospace;
+  --color-pixel-bg: #0d0d2b;
+  --color-pixel-gold: #ffd700;
+  --color-pixel-green: #00ff88;
+  --color-pixel-red: #ff4444;
+  --color-pixel-blue: #4488ff;
+  --color-pixel-purple: #9944ff;
+  --color-pixel-panel: #0a0a3e;
+  --color-pixel-border: #ffd700;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background-color: #0d0d2b;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #0d0d2b;
+  color: #ffd700;
+  font-family: "Press Start 2P", monospace;
+  min-height: 100vh;
+  image-rendering: pixelated;
+}
+
+/* Star field background */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+    radial-gradient(1px 1px at 10% 15%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 25% 45%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 40% 10%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 55% 70%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 70% 30%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 85% 55%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 5% 80%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 92% 8%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 33% 90%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 78% 85%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 60% 50%, rgba(255,255,255,0.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 18% 60%, rgba(255,255,255,0.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 45% 35%, rgba(255,255,255,0.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 88% 40%, rgba(255,255,255,0.5) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Scanlines overlay */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.03) 2px,
+    rgba(0,0,0,0.03) 4px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Blink animation */
+@keyframes blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+@keyframes pulse-gold {
+  0%, 100% { text-shadow: 0 0 10px #ffd700, 0 0 20px #ffd700; }
+  50% { text-shadow: 0 0 20px #ffd700, 0 0 40px #ffd700, 0 0 60px #ffaa00; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes slide-in {
+  from { transform: translateX(-100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes pixel-pop {
+  0% { transform: scale(0); opacity: 0; }
+  60% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes march {
+  0% { background-position: 0 0; }
+  100% { background-position: 16px 0; }
+}
+
+.blink { animation: blink 1s step-end infinite; }
+.pulse-gold { animation: pulse-gold 2s ease-in-out infinite; }
+.float { animation: float 3s ease-in-out infinite; }
+.pixel-pop { animation: pixel-pop 0.3s ease-out; }
+
+.pixel-border {
+  border: 4px solid #ffd700;
+  box-shadow: 4px 4px 0px 0px rgba(255, 215, 0, 0.5);
+}
+
+.pixel-border-green {
+  border: 4px solid #00ff88;
+  box-shadow: 4px 4px 0px 0px rgba(0, 255, 136, 0.4);
+}
+
+.pixel-border-red {
+  border: 4px solid #ff4444;
+  box-shadow: 4px 4px 0px 0px rgba(255, 68, 68, 0.4);
+}
+
+.pixel-btn {
+  border: 4px solid #000;
+  box-shadow: 4px 4px 0px 0px #000;
+  transition: transform 0.05s, box-shadow 0.05s;
+  cursor: pointer;
+  font-family: "Press Start 2P", monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.pixel-btn:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px 0px #000;
+}
+
+.pixel-btn:active {
+  transform: translate(4px, 4px);
+  box-shadow: none;
+}
+
+.pixel-input {
+  background: #0a0a3e;
+  border: 4px solid #ffd700;
+  color: #ffd700;
+  font-family: "Press Start 2P", monospace;
+  font-size: 0.7rem;
+  padding: 0.75rem;
+  outline: none;
+  width: 100%;
+}
+
+.pixel-input:focus {
+  border-color: #00ff88;
+  box-shadow: 0 0 0 2px rgba(0, 255, 136, 0.3);
+}
+
+.pixel-input::placeholder {
+  color: rgba(255, 215, 0, 0.4);
+}
+
+.pixel-card {
+  background: #0a0a3e;
+  border: 4px solid #ffd700;
+  box-shadow: 8px 8px 0px 0px rgba(255, 215, 0, 0.3);
+  position: relative;
+}
+
+.pixel-panel {
+  background: rgba(10, 10, 62, 0.9);
+  border: 2px solid rgba(255, 215, 0, 0.4);
+}
+
+.march-border {
+  border: 4px solid transparent;
+  background-image: linear-gradient(#0a0a3e, #0a0a3e),
+    repeating-linear-gradient(90deg, #ffd700 0, #ffd700 8px, transparent 8px, transparent 16px);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  animation: march 0.5s linear infinite;
+}
+
+/* HP/MP bar */
+.stat-bar {
+  height: 12px;
+  background: #111;
+  border: 2px solid #444;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-bar-fill {
+  height: 100%;
+  transition: width 0.5s ease;
+}
+
+/* Selection highlight */
+.pixel-select {
+  background: rgba(255, 215, 0, 0.15);
+  border: 2px solid #ffd700;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #0a0a3e; }
+::-webkit-scrollbar-thumb { background: #ffd700; border: 2px solid #0a0a3e; }
+
+/* Vote progress bar */
+@keyframes vote-fill {
+  from { width: 0%; }
+}
+
+/* Print styles for poster */
+@media print {
+  .no-print { display: none !important; }
+  html, body { background: #0d0d2b !important; margin: 0; padding: 0; }
+  body::before, body::after { display: none; }
+  #poster {
+    width: 100% !important;
+    margin: 0 auto;
+    box-shadow: none !important;
+    border-color: #ffd700 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  @page {
+    size: A3 portrait;
+    margin: 0.5cm;
+  }
 }
