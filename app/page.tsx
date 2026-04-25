@@ -59,6 +59,11 @@ export default function Home() {
               🗺️ VENUE MAP
             </button>
           </Link>
+          <a href="https://eizazbirthday.personalise.me/a/fde63a09-1d06-441f-be31-6e4eba6e0879" target="_blank" rel="noopener noreferrer">
+            <button className="pixel-btn" style={{ width: "100%", background: "#00ccff", color: "#000", fontSize: "0.65rem", padding: "0.85rem" }}>
+              📸 PRINT PHOTO
+            </button>
+          </a>
         </div>
       </div>
 
